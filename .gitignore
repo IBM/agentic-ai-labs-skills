@@ -1,0 +1,15 @@
+# Skill-creator iteration workspaces — local-only eval runs, snapshots, benchmarks
+plugins/*/skills/*-workspace/
+
+# Secrets / local config — never commit
+.env
+.env.*
+.mcp.json
+.claude/settings.local.json
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/

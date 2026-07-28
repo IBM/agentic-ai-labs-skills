@@ -1,0 +1,24 @@
+name: validate
+on: [pull_request, push]
+jobs:
+  marketplace:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate marketplace manifest + skills
+        run: |
+          python3 - <<'PY'
+          import json, os, glob, sys
+          m = json.load(open('.claude-plugin/marketplace.json'))
+          errs = []
+          for p in m.get('plugins', []):
+              src = p.get('source', '')
+              if not src or not os.path.isdir(src):
+                  errs.append(f"plugin '{p.get('name')}': source missing -> {src}"); continue
+              for sk in glob.glob(f"{src}/skills/*/SKILL.md"):
+                  head = open(sk, encoding='utf-8').read(2000)
+                  if 'name:' not in head or 'description:' not in head:
+                      errs.append(f"{sk}: missing name/description frontmatter")
+          print("\n".join("ERROR: " + e for e in errs) or "marketplace.json + skills OK")
+          sys.exit(1 if errs else 0)
+          PY

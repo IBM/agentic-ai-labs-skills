@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "agentic-ai-labs",
+  "description": "Shared Claude Code plugins and skills from the Agentic AI Labs team.",
+  "owner": {
+    "name": "Agentic AI Labs"
+  },
+  "plugins": [
+    {
+      "name": "wxo-agent-architect",
+      "description": "Skill for building, editing, and publishing IBM watsonx Orchestrate agents, tools, toolkits, knowledge bases, models, and connections.",
+      "author": {
+        "name": "Mike O'Brien"
+      },
+      "source": "./plugins/wxo-agent-architect"
+    }
+  ]
+}

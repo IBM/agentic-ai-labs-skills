@@ -1,78 +1,68 @@
-<!-- This should be the location of the title of the repository, normally the short name -->
-# repo-template
+# Agentic AI Labs — Claude Code plugins & skills
 
-<!-- Build Status, is a great thing to have at the top of your repository, it shows that you take your CI/CD as first class citizens -->
-<!-- [![Build Status](https://travis-ci.org/jjasghar/ibm-cloud-cli.svg?branch=master)](https://travis-ci.org/jjasghar/ibm-cloud-cli) -->
+Shared [Claude Code](https://claude.com/claude-code) plugins and skills from the
+IBM **Agentic AI Labs** team. This repository is a **plugin marketplace**: add it
+once, then install any skill it publishes.
 
-<!-- Not always needed, but a scope helps the user understand in a short sentance like below, why this repo exists -->
 ## Scope
 
-The purpose of this project is to provide a template for new open source repositories.
+A curated set of Claude Code skills for building on IBM's agentic platforms. The
+marketplace manifest lives at [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json);
+each skill is a plugin under [`plugins/`](plugins/).
 
-<!-- A more detailed Usage or detailed explaination of the repository here -->
-## Usage
+## Available skills
 
-This repository contains some example best practices for open source repositories:
+| Skill | Description |
+|-------|-------------|
+| [`wxo-agent-architect`](plugins/wxo-agent-architect) | Build, edit, test, and publish IBM watsonx Orchestrate (WXO) agents, tools, toolkits, knowledge bases, models, and connections using the orchestrate ADK and CLI. |
 
-* [LICENSE](LICENSE)
-* [README.md](README.md)
-* [CONTRIBUTING.md](CONTRIBUTING.md)
-* [MAINTAINERS.md](MAINTAINERS.md)
-* [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
-<!-- A Changelog allows you to track major changes and things that happen, https://github.com/github-changelog-generator/github-changelog-generator can help automate the process -->
-* [CHANGELOG.md](CHANGELOG.md)
+## Install
 
-> These are optional
+In Claude Code:
 
-<!-- The following are OPTIONAL, but strongly suggested to have in your repository. -->
-* [dco.yml](.github/dco.yml) - This enables DCO bot for you, please take a look https://github.com/probot/dco for more details.
-* [travis.yml](.travis.yml) - This is a example `.travis.yml`, please take a look https://docs.travis-ci.com/user/tutorial/ for more details.
+```
+/plugin marketplace add IBM/agentic-ai-labs-skills
+/plugin install wxo-agent-architect@agentic-ai-labs
+```
 
-These may be copied into a new or existing project to make it easier for developers not on a project team to collaborate.
+- `/plugin marketplace add` takes the **repository** (`IBM/agentic-ai-labs-skills`).
+- `/plugin install` takes `<plugin>@<marketplace>` — the marketplace name is
+  `agentic-ai-labs` (from the manifest), independent of the repo name.
 
-<!-- A notes section is useful for anything that isn't covered in the Usage or Scope. Like what we have below. -->
-## Notes
+Once installed, the skill activates automatically when you work with watsonx
+Orchestrate, or you can invoke it directly.
 
-**NOTE: While this boilerplate project uses the Apache 2.0 license, when
-establishing a new repo using this template, please use the
-license that was approved for your project.**
+## Requirements
 
-**NOTE: This repository has been configured with the [DCO bot](https://github.com/probot/dco).
-When you set up a new repository that uses the Apache license, you should
-use the DCO to manage contributions. The DCO bot will help enforce that.
-Please contact one of the IBM GH Org stewards.**
+- **Claude Code** with plugin support.
+- For `wxo-agent-architect`: the `orchestrate` ADK/CLI and, for documentation
+  lookups, the credential-free `watsonx-orchestrate-adk-docs` MCP server. See the
+  skill's own `SKILL.md` and `reference/` for setup, credential handling, and the
+  CLI-first workflow.
 
-<!-- Questions can be useful but optional, this gives you a place to say, "This is how to contact this project maintainers or create PRs -->
-If you have any questions or issues you can create a new [issue here][issues].
+## Contributing
 
-Pull requests are very welcome! Make sure your patches are well tested.
-Ideally create a topic branch for every separate change you make. For
-example:
+Contributions are welcome. Please review [CONTRIBUTING.md](CONTRIBUTING.md) and
+[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). This repository enforces the
+[Developer Certificate of Origin (DCO)](https://developercertificate.org/) — sign
+your commits with `git commit -s`.
 
-1. Fork the repo
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Added some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+Source files carry an SPDX header:
+
+```text
+# Copyright contributors to the Agentic AI Labs project
+# SPDX-License-Identifier: Apache-2.0
+```
+
+## Security
+
+To report a vulnerability, follow [SECURITY.md](SECURITY.md). Do not open a public
+issue for security reports.
+
+## Maintainers
+
+See [MAINTAINERS.md](MAINTAINERS.md).
 
 ## License
 
-All source files must include a Copyright and License header. The SPDX license header is 
-preferred because it can be easily scanned.
-
-If you would like to see the detailed LICENSE click [here](LICENSE).
-
-```text
-#
-# Copyright IBM Corp. {Year project was created} - {Current Year}
-# SPDX-License-Identifier: Apache-2.0
-#
-```
-## Authors
-
-Optionally, you may include a list of authors, though this is redundant with the built-in
-GitHub list of contributors.
-
-- Author: New OpenSource IBMer <new-opensource-ibmer@ibm.com>
-
-[issues]: https://github.com/IBM/repo-template/issues/new
+Apache-2.0 — see [LICENSE](LICENSE).
