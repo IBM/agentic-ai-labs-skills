@@ -1,6 +1,6 @@
-<!-- Copyright contributors to the Agent Skills project -->
+<!-- Copyright contributors to the Agentic AI Labs project -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
-<!-- This file was authored with the assistance of AI Tool: Claude Code (Claude Opus) -->
+<!-- This file was authored with the assistance of AI Tool: Claude Code (Claude Opus, Claude Sonnet) -->
 
 # wxo-agent-architect
 
@@ -14,7 +14,7 @@ Activates automatically when you mention watsonx Orchestrate, the orchestrate AD
 - Discovering existing tools/agents to reuse or compose
 - Choosing the right WXO primitive for your task
 - Testing locally or against IBM Cloud
-- Deploying via the `watsonx-orchestrate-adk` MCP server
+- Deploying and promoting through the `orchestrate` CLI (the default path)
 
 See [`WORKFLOW.md`](./WORKFLOW.md) for the end-to-end deployment flow (plan →
 build → deploy → test → iterate → promote) and how it fits with a platform
@@ -22,29 +22,21 @@ team's architecture-review gate.
 
 ## Install
 
-> **Offline install (current).** This plugin ships as a zip archive and is
-> installed from a local path. A hosted marketplace install will replace these
-> steps once the plugin is published to a public repository.
+In Claude Code, add the marketplace and install the plugin (the
+`@agentic-ai-labs` suffix is the marketplace name from the manifest, not the
+repository name):
 
-1. Unzip the archive. It expands to a `wxo-agent-architect/` folder containing
-   the marketplace (e.g. `~/Downloads/wxo-agent-architect`).
-2. In Claude Code, add that folder as a local marketplace, then install the
-   plugin (the `@agentic-ai-labs` suffix is the marketplace name, not a remote
-   location). Use the path where you unzipped it:
+```
+/plugin marketplace add IBM/agentic-ai-labs-skills
+/plugin install wxo-agent-architect@agentic-ai-labs
+```
 
-   ```
-   /plugin marketplace add ~/Downloads/wxo-agent-architect
-   /plugin install wxo-agent-architect@agentic-ai-labs
-   ```
-3. Run `/reload-plugins` to load the skill into the running session (this also
-   loads the skill — no separate reload needed). If it still doesn't appear,
-   restart Claude Code.
+Run `/reload-plugins` to load the skill into the running session (restart Claude
+Code if it still doesn't appear). Verify with `/plugin list`. Once loaded, the
+skill activates automatically when you mention watsonx Orchestrate, and can also
+be invoked directly as `/wxo-agent-architect:wxo-agent-architect`.
 
-Verify with `/plugin list`. Once loaded, the skill activates automatically
-when you mention watsonx Orchestrate (see *What it does* above) — there is no
-separate enable step.
-
-To pick up a newer archive later, re-run the unzip, then:
+To pick up newer content later:
 
 ```
 /plugin marketplace update agentic-ai-labs
@@ -53,6 +45,15 @@ To pick up a newer archive later, re-run the unzip, then:
 
 ## Requirements
 
-- `uv` installed: `brew install uv`
-- `.mcp.json` in the project root with `watsonx-orchestrate-adk` and `watsonx-orchestrate-adk-docs` servers configured
-- WXO credentials in your shell (`WO_API_KEY` + `WO_INSTANCE` for IBM Cloud, or the `WO_DEVELOPER_EDITION_*` set for local)
+- **`watsonx-orchestrate-adk-docs` MCP server** (required, credential-free HTTP
+  docs server):
+  `claude mcp add --transport http watsonx-orchestrate-adk-docs https://developer.watson-orchestrate.ibm.com/mcp`
+- **The `orchestrate` ADK/CLI** — the skill walks you through installing it
+  (`uv pip install ibm-watsonx-orchestrate`) into a project-local virtualenv, so
+  have `uv` installed (`brew install uv`).
+- **WXO credentials in your shell** — `WO_API_KEY` + `WO_INSTANCE` for IBM Cloud,
+  or the `WO_DEVELOPER_EDITION_*` set for a local Developer Edition. Keep them in
+  an untracked `.env`; never commit them.
+- *Optional:* the credentialed `watsonx-orchestrate-adk` MCP server, only for
+  headless or no-shell automation. See
+  [`reference/cli_vs_mcp.md`](./skills/wxo-agent-architect/reference/cli_vs_mcp.md).

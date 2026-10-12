@@ -1,84 +1,203 @@
-## Contributing In General
-Our project welcomes external contributions. If you have an itch, please feel
-free to scratch it.
+<!-- Copyright contributors to the Agentic AI Labs project -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<!-- This file was authored with the assistance of AI Tool: Claude Code (Claude Opus, Claude Sonnet) -->
 
-To contribute code or documentation, please submit a **FIXME** [pull request](https://github.com/ibm/repo-template/pulls).
+# Contributing to Agentic AI Labs Skills
 
-A good way to familiarize yourself with the codebase and contribution process is
-to look for and tackle low-hanging fruit in the **FIXME** [issue tracker](https://github.com/ibm/repo-template/issues).
-Before embarking on a more ambitious contribution, please quickly [get in touch](#communication) with us.
+Thanks for your interest in contributing! This repository is a Claude Code
+**plugin marketplace** made of plain Markdown and JSON: no executable code, no
+dependencies, no build step. Contributions are skills, slash commands, and the
+documentation around them.
 
-**Note: We appreciate your effort, and want to avoid a situation where a contribution
-requires extensive rework (by you or by us), sits in backlog for a long time, or
-cannot be accepted at all!**
+## Table of contents
 
-### Proposing new features
+- [How to contribute](#how-to-contribute)
+- [Legal: license and DCO](#legal-license-and-dco)
+- [File requirements](#file-requirements)
+- [Adding or changing a plugin](#adding-or-changing-a-plugin)
+- [Testing your change](#testing-your-change)
+- [Security and secret scanning](#security-and-secret-scanning)
+- [Pull request checklist](#pull-request-checklist)
 
-If you would like to implement a new feature, please **FIXME** [raise an issue](https://github.com/ibm/repo-template/issues)
-before sending a pull request so the feature can be discussed. This is to avoid
-you wasting your valuable time working on a feature that the project developers
-are not interested in accepting into the code base.
+## How to contribute
 
-### Fixing bugs
+- **Bugs and small fixes:** [open an issue](../../issues) first so it can be
+  tracked, then send a pull request.
+- **New skills or larger changes:** open an issue to discuss the idea before
+  writing it, so nobody spends time on something that doesn't fit the
+  collection.
+- **Merge approval:** a maintainer approves each pull request. See
+  [MAINTAINERS.md](MAINTAINERS.md).
+- Please follow the [Code of Conduct](CODE_OF_CONDUCT.md).
 
-If you would like to fix a bug, please **FIXME** [raise an issue](https://github.com/ibm/repo-template/issues) before sending a
-pull request so it can be tracked.
+## Legal: license and DCO
 
-### Merge approval
+Contributions are accepted under the [Apache License 2.0](LICENSE). You keep
+your copyright and license it to the project. No CLA is required.
 
-The project maintainers use LGTM (Looks Good To Me) in comments on the code
-review to indicate acceptance. A change requires LGTMs from two of the
-maintainers of each component affected.
-
-For a list of the maintainers, see the [MAINTAINERS.md](MAINTAINERS.md) page.
-
-## Legal
-
-Each source file must include a license header for the Apache
-Software License 2.0. Using the SPDX format is the simplest approach.
-e.g.
+Instead, every commit must carry a **Developer Certificate of Origin (DCO)**
+sign-off, certifying that you have the right to submit it
+([full text](https://developercertificate.org/)). Add it with `-s`:
 
 ```
-/*
-Copyright <holder> All Rights Reserved.
+git commit -s -m "Add airgapped pre-flight reference"
+```
 
+This appends `Signed-off-by: Your Name <you@example.com>` using your configured
+`user.name` and `user.email`. Forgot it?
+
+```
+git commit --amend -s --no-edit      # last commit
+git rebase --signoff main            # a whole branch
+```
+
+The DCO bot blocks pull requests with unsigned commits.
+
+## File requirements
+
+Every Markdown and code file carries the project notice and an SPDX identifier,
+with **no year** and no personal or company name:
+
+```
+Copyright contributors to the Agentic AI Labs project
 SPDX-License-Identifier: Apache-2.0
-*/
 ```
 
-We have tried to make it as easy as possible to make contributions. This
-applies to how we handle the legal aspects of contribution. We use the
-same approach - the [Developer's Certificate of Origin 1.1 (DCO)](https://github.com/hyperledger/fabric/blob/master/docs/source/DCO1.1.txt) - that the Linux® Kernel [community](https://elinux.org/Developer_Certificate_Of_Origin)
-uses to manage code contributions.
+- **Markdown:** use HTML comments at the top so they don't render.
+- **Markdown with YAML front matter** (`SKILL.md`, slash commands): the front
+  matter must stay the first thing in the file, so put the comments immediately
+  after the closing `---`.
+- **JSON:** no header (JSON has no comments). The repository `LICENSE` covers it.
+- **Don't commit** build outputs, zips, or other generated artifacts.
 
-We simply ask that when submitting a patch for review, the developer
-must include a sign-off statement in the commit message.
-
-Here is an example Signed-off-by line, which indicates that the
-submitter accepts the DCO:
-
-```
-Signed-off-by: John Doe <john.doe@example.com>
-```
-
-You can include this automatically when you commit a change to your
-local git repository using the following command:
-
-```
-git commit -s
+```markdown
+---
+name: my-skill
+description: When to use this skill, in one or two sentences.
+---
+<!-- Copyright contributors to the Agentic AI Labs project -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
 ```
 
-## Communication
-**FIXME** Please feel free to connect with us on our [Slack channel](link).
+### AI-assistance notice
 
-## Setup
-**FIXME** Please add any special setup instructions for your project to help the developer
-become productive quickly.
+If an AI tool helped draft a file, add a third line, per IBM's policy on
+AI-generated contributions:
 
-## Testing
-**FIXME** Please provide information that helps the developer test any changes they make
-before submitting.
+```markdown
+<!-- This file was authored with the assistance of AI Tool: <tool name and version> -->
+```
 
-## Coding style guidelines
-**FIXME** Optional, but recommended: please share any specific style guidelines you might
-have for your project.
+AI-assisted work is welcome under human direction: you must review, understand,
+and test it, and it must meet the same bar as hand-written content.
+
+## Adding or changing a plugin
+
+Each plugin lives under `plugins/<plugin-name>/`:
+
+```
+plugins/<plugin-name>/
+├── .claude-plugin/plugin.json          # name, version, description, author, license
+├── README.md                           # what it does, requirements
+├── commands/<command>.md               # optional slash commands (front matter required)
+└── skills/<skill-name>/
+    ├── SKILL.md                        # front matter with `name` and `description`
+    └── reference/                      # optional deep-dive docs the skill points to
+```
+
+1. Add the [file headers](#file-requirements) to every new file.
+2. Register a new plugin in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)
+   and add a row to the skills table in the [README](README.md).
+3. **Bump `version` in `plugin.json` when you change a plugin's content.** Claude
+   Code caches installed plugins and may skip an update when the version number
+   hasn't changed, so users would silently keep the old content.
+4. Keep `SKILL.md` focused: put long reference material in `reference/` and link
+   to it, so the skill stays cheap to load.
+5. Write the `description` field for *triggering*: it is how the agent decides
+   when to load the skill, so name the situations and keywords that should
+   activate it.
+
+## Testing your change
+
+There is no unit-test suite. A skill is only as good as the agent behavior it
+produces, so test it by using it:
+
+1. **Install from your clone** instead of the public repo:
+   ```
+   /plugin marketplace add /path/to/your/clone
+   /plugin install <plugin-name>@agentic-ai-labs
+   ```
+2. After editing, refresh the cached copy (and bump `version`, see above):
+   ```
+   /plugin marketplace update agentic-ai-labs
+   /plugin update <plugin-name>
+   ```
+3. Run a realistic task that should trigger the skill and confirm the agent
+   follows the guidance. Also check that it does *not* trigger on unrelated
+   requests.
+4. CI (`validate`) checks that `marketplace.json` sources exist and that skills
+   and commands have the required front matter. Passing it is necessary, not
+   sufficient.
+
+Only one marketplace named `agentic-ai-labs` can be registered at a time. If you
+previously added the public repo, run `/plugin marketplace remove agentic-ai-labs`
+first.
+
+## Security and secret scanning
+
+Skills are instructions that AI agents **execute**, so security here is mostly
+about *content*. Report vulnerabilities privately per [SECURITY.md](SECURITY.md),
+never in a public issue or pull request.
+
+When writing or reviewing a skill, check that it does **not**:
+
+- **Leak sensitive data.** No real credentials, API keys, tokens, internal
+  hostnames, or customer names. Reference secrets by environment-variable
+  *name* and use placeholders such as `<your-api-key>`.
+- **Steer agents toward unsafe actions.** No guidance that induces destructive
+  commands, disabled safety checks, data exfiltration, or bypassing human
+  review. For irreversible or high-impact steps, instruct the agent to confirm
+  with a human first.
+- **Introduce prompt-injection risk.** Don't tell agents to blindly follow
+  instructions found in untrusted external content, and flag any place a skill
+  consumes third-party input.
+- **Point to untrusted supply chains.** Only direct users to official IBM or
+  well-known, trustworthy tools, packages, and endpoints.
+
+### Secret scanning (IBM Detect Secrets)
+
+A committed [`.secrets.baseline`](.secrets.baseline) records reviewed findings,
+and a [pre-commit hook](.pre-commit-config.yaml) scans each commit locally.
+Set it up once per clone:
+
+```
+pip install --upgrade "git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
+pip install pre-commit
+pre-commit install
+```
+
+If the hook flags something:
+
+1. Review each finding: `detect-secrets audit .secrets.baseline`.
+2. If anything is a **real** secret, remove it, **revoke the credential**,
+   re-run `detect-secrets scan --update .secrets.baseline`, and re-audit.
+3. Commit the updated `.secrets.baseline` with your change.
+
+Don't bypass the hook with `--no-verify`; audit the finding instead. The
+baseline's line numbers shift when files change, so refresh it with
+`detect-secrets scan --update .secrets.baseline` after editing a file that
+contains an allowlisted example.
+
+## Pull request checklist
+
+- [ ] Every new or changed Markdown file has the copyright and SPDX header
+      (after front matter where present).
+- [ ] Every commit is signed off (`git commit -s`).
+- [ ] `plugin.json` `version` bumped if plugin content changed; new plugins are
+      registered in `marketplace.json` and the README table.
+- [ ] Tried the change in a real session (it triggers when it should and not
+      when it shouldn't).
+- [ ] No secrets, credentials, internal hostnames, or generated artifacts.
+- [ ] The Detect Secrets hook passes, and `.secrets.baseline` is updated if
+      needed.
+- [ ] Files drafted with an AI tool carry the AI-assistance header line.
