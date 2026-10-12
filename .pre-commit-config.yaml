@@ -1,0 +1,18 @@
+# Copyright contributors to the Agentic AI Labs project
+# SPDX-License-Identifier: Apache-2.0
+# This file was authored with the assistance of AI Tool: Claude Code (Claude Opus)
+#
+# IBM Detect Secrets pre-commit hook — scans staged changes for accidentally
+# committed secrets/credentials before they reach GitHub (ITSS Ch.5 §2.3.a.iii).
+# Setup: pip install pre-commit && pre-commit install
+repos:
+  - repo: https://github.com/ibm/detect-secrets
+    # Pin to the installed Detect Secrets version. Confirm this matches the
+    # rev in IBM's official .pre-commit-config.yaml for your org.
+    rev: 0.13.1+ibm.64.dss
+    hooks:
+      - id: detect-secrets  # pragma: whitelist secret
+        # --baseline: only re-flag findings not already audited in the baseline.
+        # --use-all-plugins: also scan with plugins newer than those in the
+        #   baseline, so newly added detectors still run.
+        args: [--baseline, .secrets.baseline, --use-all-plugins]
