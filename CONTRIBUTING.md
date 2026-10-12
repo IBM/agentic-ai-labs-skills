@@ -168,7 +168,10 @@ When writing or reviewing a skill, check that it does **not**:
 
 A committed [`.secrets.baseline`](.secrets.baseline) records reviewed findings,
 and a [pre-commit hook](.pre-commit-config.yaml) scans each commit locally.
-Set it up once per clone:
+The [`Detect Secrets` workflow](.github/workflows/detect-secrets.yml) repeats
+the scan in CI on every pull request using IBM's `git-defenders` container, and
+fails on any unaudited, live, or audited-as-real finding. Set up the local hook
+once per clone:
 
 ```
 pip install --upgrade "git+https://github.com/ibm/detect-secrets.git@master#egg=detect-secrets"
