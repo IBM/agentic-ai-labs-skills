@@ -3,7 +3,7 @@ name: wxo-agent-architect
 description: Use when building, editing, testing, or deploying anything in IBM watsonx Orchestrate (WXO) — agents, tools, toolkits, knowledge bases, models, or connections. Always invoke when the user mentions watsonx Orchestrate, WXO, the orchestrate ADK, agent.yaml, toolkit-config.yaml, the `orchestrate` CLI, the `@tool` decorator, or WXO credentials. Also trigger when the user asks about publishing an AI assistant to IBM Cloud, wiring up a collaborator agent, or working with WXO Developer Edition.
 ---
 
-<!-- Copyright contributors to the Agent Skills project -->
+<!-- Copyright contributors to the Agentic AI Labs project -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <!-- This file was authored with the assistance of AI Tool: Claude Code (Claude Opus) -->
 
@@ -66,30 +66,39 @@ but every platform tool says *No active environment found*" trap. See
 `.env`-not-loading case specifically, see `reference/mcp_setup.md` (Windows
 section).
 
-### Credential health check at startup (non-blocking, but be loud)
+### Credential health check at startup (non-blocking; warn only on what needs a human)
 
 Before any build work that needs a live tenant, verify the WXO credentials
-actually authenticate — and **report the result to the user prominently.** This
-is the check that saves days: a stale, rotated, or expired key fails with a bare
-`401` and *no hint that the key is the problem*. **Never block** on it (the user
-may not have a key yet), but **never stay silent** either.
+authenticate — but **reserve the alarm for problems a human must fix.** Two
+failure modes look alike and must be handled differently:
+
+- an **expired session token** is routine — remote tokens live only ~2h (less on
+  CPD) and *self-heal* by re-activating with the stored key. **Refresh it
+  silently; do NOT warn.**
+- an **invalid / rotated / missing key** genuinely needs the user. **Warn loudly.**
+
+**Never block** either way (the user may not have a key yet). The point of the
+check is to catch a *dead or missing key* before the user invests in a build —
+not to narrate every token refresh.
 
 1. **No credentials present** (no `WO_API_KEY`/`WO_INSTANCE`, no CPD username, or
-   no `.env`) → warn plainly: *"⚠️ No WXO credentials found — provide them when
+   no `.env`) → ⚠️ warn plainly: *"No WXO credentials found — provide them when
    ready; not blocking."* You can still do Phase 1–2 local work that needs no
    tenant.
 
-2. **Credentials present** → run ONE lightweight authenticated call and interpret
-   it (guard it so it can't hang — e.g. a timeout wrapper):
-   `orchestrate env activate <env> …` then `orchestrate models list`. Then report:
+2. **Credentials present** → run ONE guarded authenticated call (`orchestrate
+   models list`, timeout-wrapped so it can't hang) and branch:
    - **Clean model list** → *"✅ WXO credentials valid against `<instance>`."*
-   - **`token found ... is missing or expired`** → *"🔁 Token expired — just
-     re-activate."* Remote tokens are short-lived (SaaS ~2h, sometimes less); this
-     is routine, not a bad key. Re-run `orchestrate env activate`.
-   - **`Unauthorized` / `Status code: 401` / `Error getting CPD Token`** →
-     **🔴 loud warning:** the API key is **invalid, rotated, or expired —
-     regenerate it.** Do not block; the user can fix and re-run. Point them to the
-     right key per topology:
+   - **Token missing/expired** (`token found ... is missing or expired`) →
+     **just re-activate silently** with the stored key: `orchestrate env activate
+     <env> --api-key <from env>` (add `--username` on CPD). If it succeeds,
+     proceed — at most a quiet one-line note (*"🔄 refreshed expired token"*),
+     **not a warning**. This re-activation is also the discriminator for the next
+     case: if it fails, the key is the problem.
+   - **Re-activation / auth fails** (`Unauthorized` / `Status code: 401` /
+     `Error getting CPD Token`) → **🔴 loud warning:** the API key is **invalid,
+     rotated, or expired — regenerate it.** *This* is the only branch where the
+     user must act. Do not block. Point them to the right key per topology:
      - **IBM Cloud** — regenerate the *watsonx Orchestrate* API key (not an IBM
        Cloud resource-page key).
      - **CPD** — regenerate the platform API key in the CPD console (avatar →
@@ -97,8 +106,10 @@ may not have a key yet), but **never stay silent** either.
        succeeds where `--api-key` 401s, the key is dead** — see
        `reference/self_hosted_cpd.md`.
 
-Surface this as a short status line at the **top of your first substantive
-reply** so a missing or dead key is caught before the user invests in a build.
+**Rule of thumb: the warning channel is for human-action items only** (missing or
+dead key). A routine token refresh stays invisible — surfacing it every ~2h would
+train users to ignore the warnings that actually matter. Put any status line at
+the top of your first substantive reply.
 
 ### Before the first `git commit` — keep credentials out of version control
 

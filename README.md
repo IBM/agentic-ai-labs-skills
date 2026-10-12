@@ -1,3 +1,6 @@
+<!-- Copyright contributors to the Agentic AI Labs project -->
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
 # Agentic AI Labs — Claude Code plugins & skills
 
 Shared [Claude Code](https://claude.com/claude-code) plugins and skills from the
