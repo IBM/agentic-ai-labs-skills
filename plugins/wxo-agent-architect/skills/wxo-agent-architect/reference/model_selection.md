@@ -1,4 +1,4 @@
-<!-- Copyright contributors to the Agent Skills project -->
+<!-- Copyright contributors to the Agentic AI Labs project -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <!-- This file was authored with the assistance of AI Tool: Claude Code (Claude Opus) -->
 

@@ -3,7 +3,7 @@ name: wxo-agent-architect
 description: Use when building, editing, testing, or deploying anything in IBM watsonx Orchestrate (WXO) — agents, tools, toolkits, knowledge bases, models, or connections. Always invoke when the user mentions watsonx Orchestrate, WXO, the orchestrate ADK, agent.yaml, toolkit-config.yaml, the `orchestrate` CLI, the `@tool` decorator, or WXO credentials. Also trigger when the user asks about publishing an AI assistant to IBM Cloud, wiring up a collaborator agent, or working with WXO Developer Edition.
 ---
 
-<!-- Copyright contributors to the Agent Skills project -->
+<!-- Copyright contributors to the Agentic AI Labs project -->
 <!-- SPDX-License-Identifier: Apache-2.0 -->
 <!-- This file was authored with the assistance of AI Tool: Claude Code (Claude Opus) -->
 
