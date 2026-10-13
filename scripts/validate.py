@@ -35,6 +35,7 @@ FETCH_AND_RUN_RES = [
     re.compile(r"(?i)\b(curl|wget)\b[^\n|]*\|\s*(sudo\s+)?(ba|z|k)?sh\b"),
     re.compile(r"(?i)\b(curl|wget)\b[^\n|]*\|\s*(sudo\s+)?python[0-9.]*\b"),
     re.compile(r"(?i)\b(ba|z)?sh\s+<\(\s*(curl|wget)\b"),
+    re.compile(r"(?i)\$\(\s*(curl|wget)\b"),
     re.compile(r"(?i)\biex\b.*\b(DownloadString|Invoke-WebRequest|iwr|irm|Invoke-RestMethod)\b"),
 ]
 SKILL_BODY_WARN_LINES = 500
@@ -83,7 +84,16 @@ def check_frontmatter(root: Path, skill: cl.Skill, res: Result) -> None:
 
 
 def has_guardrail(skill: cl.Skill) -> bool:
-    return any(line.rstrip() == cl.GUARDRAIL_HEADING for line in skill.body.splitlines())
+    """True if the guardrail heading appears as a real heading (not inside a code fence)."""
+    in_fence = False
+    for line in skill.body.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("```") or stripped.startswith("~~~"):
+            in_fence = not in_fence
+            continue
+        if not in_fence and line.rstrip() == cl.GUARDRAIL_HEADING:
+            return True
+    return False
 
 
 def check_verified(root: Path, skill: cl.Skill, entry: dict, res: Result) -> None:
@@ -145,6 +155,14 @@ def check_security_flags(root: Path, skill: cl.Skill, entry: dict, res: Result) 
                 f"{where}/{rel}: {', '.join(reasons)} in an imported skill; review it and add "
                 f"{rel!r} to security_allowlist (see docs/importing-skills.md)"
             )
+
+
+def check_no_symlinks(root: Path, skill: cl.Skill, res: Result) -> None:
+    for dirpath, dirnames, filenames in os.walk(skill.path):
+        for n in dirnames + filenames:
+            p = Path(dirpath) / n
+            if p.is_symlink():
+                res.errors.append(f"{_rel(root, p)}: symlinks are not allowed inside skills")
 
 
 def check_entry(root: Path, skill: cl.Skill, res: Result) -> None:
@@ -347,6 +365,7 @@ def run(root: Path, base_sha: str | None = None) -> Result:
             for e in skill.errors:
                 res.errors.append(f"{_rel(root, skill.path)}: {e}")
             check_frontmatter(root, skill, res)
+            check_no_symlinks(root, skill, res)
             check_entry(root, skill, res)
     check_names_unique(root, products, pointers, res)
     check_pointers(root, pointers, res)

@@ -214,7 +214,7 @@ def content_sha256(root: Path, skill_dir: Path) -> str:
     h = hashlib.sha256()
     for f in tracked_files(root, skill_dir):
         rel = f.relative_to(skill_dir).as_posix()
-        if rel == ENTRY_FILE or not f.is_file():
+        if rel == ENTRY_FILE or f.is_symlink() or not f.is_file():
             continue
         mode = "x" if os.access(f, os.X_OK) else "-"
         digest = hashlib.sha256(f.read_bytes()).hexdigest()
