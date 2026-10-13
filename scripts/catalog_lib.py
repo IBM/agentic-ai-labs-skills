@@ -225,3 +225,20 @@ def content_sha256(root: Path, skill_dir: Path) -> str:
 def parse_github_url(url: str) -> tuple[str, str] | None:
     m = GITHUB_URL_RE.match(url or "")
     return (m.group(1), m.group(2)) if m else None
+
+
+def _main(argv: list[str]) -> int:
+    """`uv run scripts/catalog_lib.py hash <skill dir>` prints content_sha256."""
+    if len(argv) != 2 or argv[0] != "hash":
+        print("usage: catalog_lib.py hash <skill directory>")
+        return 2
+    root = Path(__file__).resolve().parent.parent
+    skill_dir = Path(argv[1]).resolve()
+    print(content_sha256(root, skill_dir))
+    return 0
+
+
+if __name__ == "__main__":
+    import sys
+
+    sys.exit(_main(sys.argv[1:]))

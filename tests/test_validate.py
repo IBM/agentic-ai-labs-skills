@@ -3,6 +3,7 @@
 """Validator rules: each rule has a passing and a failing case."""
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
 
@@ -344,3 +345,49 @@ def test_templates_pass_when_filled(repo, kind):
 def test_real_repository_passes():
     result = validate.run(REPO_ROOT)
     assert result.errors == []
+
+
+# --- version-bump rule (needs real git history) ---------------------------------------
+
+def _git(root, *args):
+    import subprocess
+    subprocess.run(["git", "-C", str(root), *args], check=True, capture_output=True,
+                   env={**__import__("os").environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t",
+                        "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"})
+
+
+def _committed_repo(repo):
+    repo.product("db2", version="1.0.0")
+    sdir = repo.skill("db2", "db2-build")
+    _git(repo.root, "init", "-q")
+    _git(repo.root, "add", "-A")
+    _git(repo.root, "commit", "-q", "-m", "base")
+    return sdir
+
+
+def test_content_change_without_bump_fails(repo):
+    sdir = _committed_repo(repo)
+    (sdir / "SKILL.md").write_text((sdir / "SKILL.md").read_text() + "\nmore\n")
+    _git(repo.root, "commit", "-qam", "edit")
+    assert any("bump it" in e for e in validate.run(repo.root, base_sha="HEAD~1").errors)
+
+
+def test_recording_a_verification_needs_no_bump(repo):
+    sdir = _committed_repo(repo)
+    entry = sdir / "catalog-entry.json"
+    data = json.loads(entry.read_text())
+    data["verified"] = {"bob": "2026-10-12@1.0.0"}
+    entry.write_text(json.dumps(data))
+    _git(repo.root, "commit", "-qam", "verify")
+    assert validate.run(repo.root, base_sha="HEAD~1").errors == []
+
+
+def test_other_entry_changes_still_need_a_bump(repo):
+    sdir = _committed_repo(repo)
+    entry = sdir / "catalog-entry.json"
+    data = json.loads(entry.read_text())
+    data["changes_live_systems"] = True
+    data["guardrail_exception"] = "reviewed"
+    entry.write_text(json.dumps(data))
+    _git(repo.root, "commit", "-qam", "flag")
+    assert any("bump it" in e for e in validate.run(repo.root, base_sha="HEAD~1").errors)

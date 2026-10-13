@@ -1,0 +1,23 @@
+# Copyright contributors to the Agentic AI Labs project
+# SPDX-License-Identifier: Apache-2.0
+#
+# Review ownership. Later rules override earlier ones.
+# - Catalog tooling, generated catalogs, pointer data, and CI need maintainer
+#   review: they decide what users install and what gets redistributed.
+# - Product folders map to their maintainers. When a product team joins, add
+#   the team here for its folder (see docs/importing-skills.md).
+
+*                                   @mjobrien05
+
+# Catalog control plane: maintainer review required
+/scripts/                           @mjobrien05
+/catalog/                           @mjobrien05
+/.github/                           @mjobrien05
+/.claude-plugin/                    @mjobrien05
+/.agents/                           @mjobrien05
+/CATALOG.md                         @mjobrien05
+/THIRD_PARTY_NOTICES.md             @mjobrien05
+/UPSTREAMS.md                       @mjobrien05
+
+# Products
+/products/watsonx-orchestrate/      @mjobrien05

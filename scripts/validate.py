@@ -320,11 +320,33 @@ def check_readme(root: Path, products, res: Result) -> None:
             res.errors.append(f"README.md: plugin '{p.name}' missing from the skills table")
 
 
+def _only_verification_changed(root: Path, base: str, rel: str) -> bool:
+    """True if rel is a catalog entry whose only change is the `verified` map.
+
+    Recording a verification must not force a version bump: the bump would
+    immediately mark the new verification as stale.
+    """
+    if not rel.endswith("/" + cl.ENTRY_FILE):
+        return False
+    old = cl.git(root, "show", f"{base}:{rel}")
+    path = root / rel
+    if old.returncode != 0 or not path.is_file():
+        return False
+    try:
+        before, after = json.loads(old.stdout), cl.load_json(path)
+    except ValueError:
+        return False
+    before.pop("verified", None)
+    after.pop("verified", None)
+    return before == after
+
+
 def check_version_bumps(root: Path, products, base: str, res: Result) -> None:
     for p in products:
         manifest = _rel(root, p.path / "plugin.json")
         changed = cl.git(root, "diff", "--name-only", f"{base}...HEAD", "--", _rel(root, p.path)).stdout.split()
-        if not [c for c in changed if c != manifest]:
+        content = [c for c in changed if c != manifest and not _only_verification_changed(root, base, c)]
+        if not content:
             continue
         old = cl.git(root, "show", f"{base}:{manifest}")
         if old.returncode != 0:
