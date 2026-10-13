@@ -1,0 +1,56 @@
+# Copyright contributors to the Agentic AI Labs project
+# SPDX-License-Identifier: Apache-2.0
+#
+# Weekly check that imported skills and pointer entries still match their
+# pinned upstream commits. Keeps ONE open issue labelled "upstream-drift"
+# up to date, and closes it when everything is current. See
+# scripts/check_drift.py and docs/importing-skills.md.
+name: upstream-drift
+
+on:
+  schedule:
+    - cron: "17 6 * * 1"  # Mondays 06:17 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Print the report only; do not touch issues"
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: astral-sh/setup-uv@1c37ad07a6a961277cf70c0d37d6f313000f5884 # v10.3.0
+        with:
+          version: "0.8.12"
+      - name: Install dev tooling (locked)
+        run: uv sync --frozen
+      - name: Check upstream pins
+        id: drift
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: uv run --frozen scripts/check_drift.py --output drift-report.md
+      - name: Update the drift issue
+        # Runs even when a check failed, so failures are reported too.
+        if: ${{ always() && steps.drift.outcome != 'skipped' && !(github.event_name == 'workflow_dispatch' && inputs.dry_run) }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEEDS_ATTENTION: ${{ steps.drift.outputs.needs_attention || 'true' }}
+        run: |
+          existing=$(gh issue list --label upstream-drift --state open --json number --jq '.[0].number // empty')
+          if [ "$NEEDS_ATTENTION" = "true" ]; then
+            gh label create upstream-drift --color FBCA04 --description "Upstream skill drift report" --force
+            if [ -n "$existing" ]; then
+              gh issue edit "$existing" --body-file drift-report.md
+            else
+              gh issue create --title "Upstream skill drift report" --label upstream-drift --body-file drift-report.md
+            fi
+          elif [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "All upstream pins are current."
+          fi
