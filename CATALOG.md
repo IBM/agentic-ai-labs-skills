@@ -10,6 +10,14 @@ Every IBM product skill in this repository, with its status and where it was ver
 - **imported**: copied from an upstream project at a pinned commit, with attribution (see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)).
 - **Verified**: agents a maintainer has tested the skill in. *stale* means the skill changed since that verification.
 
+## IBM Sovereign Core
+
+Plugin `sovereign-core` v0.1.0: Skills for deploying, upgrading, and operating IBM Sovereign Core on bare metal or customer-provided Red Hat OpenShift.
+
+| Skill | Kind | Status | Verified | Source |
+|---|---|---|---|---|
+| [`sovereign-core-ops`](products/sovereign-core/skills/sovereign-core-ops/SKILL.md) | ops | maintained | unverified | this repository |
+
 ## IBM watsonx Orchestrate
 
 Plugin `wxo-agent-architect` v1.2.0: Skill for building, editing, and publishing IBM watsonx Orchestrate agents, tools, toolkits, knowledge bases, models, and connections.

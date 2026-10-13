@@ -7,6 +7,15 @@
   },
   "plugins": [
     {
+      "name": "sovereign-core",
+      "description": "Skills for deploying, upgrading, and operating IBM Sovereign Core on bare metal or customer-provided Red Hat OpenShift.",
+      "author": {
+        "name": "Agentic AI Labs"
+      },
+      "source": "./products/sovereign-core",
+      "version": "0.1.0"
+    },
+    {
       "name": "wxo-agent-architect",
       "description": "Skill for building, editing, and publishing IBM watsonx Orchestrate agents, tools, toolkits, knowledge bases, models, and connections.",
       "author": {

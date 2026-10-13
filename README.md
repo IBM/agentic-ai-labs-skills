@@ -22,6 +22,7 @@ plugin package. Supported agents:
 
 | Product | Plugin | What the skills help with |
 |---------|--------|---------------------------|
+| [IBM Sovereign Core](products/sovereign-core) | [`sovereign-core`](products/sovereign-core) | Plan, install, upgrade, back up, and troubleshoot Sovereign Core on bare metal or customer-provided OpenShift, with confirmation before every change. |
 | [IBM watsonx Orchestrate](products/watsonx-orchestrate) | [`wxo-agent-architect`](products/watsonx-orchestrate) | Build, test, deploy, and promote WXO agents, tools, toolkits, knowledge bases, models, and connections using the orchestrate ADK and CLI. |
 
 **[CATALOG.md](CATALOG.md)** lists every skill. For each one it shows:

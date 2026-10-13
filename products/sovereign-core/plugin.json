@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "sovereign-core",
+  "version": "0.1.0",
+  "description": "Skills for deploying, upgrading, and operating IBM Sovereign Core on bare metal or customer-provided Red Hat OpenShift.",
+  "author": {
+    "name": "Agentic AI Labs"
+  },
+  "homepage": "https://github.com/IBM/agentic-ai-labs-skills/tree/main/products/sovereign-core",
+  "repository": "https://github.com/IBM/agentic-ai-labs-skills",
+  "license": "Apache-2.0",
+  "keywords": ["ibm", "sovereign-core", "sovereign-cloud", "openshift", "operations"],
+  "extensions": {
+    "com.ibm.agentic-ai-labs": {
+      "displayName": "IBM Sovereign Core",
+      "category": "Infrastructure"
+    }
+  }
+}
