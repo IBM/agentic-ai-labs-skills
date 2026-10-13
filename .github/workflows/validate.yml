@@ -3,8 +3,9 @@
 #
 # Validates the skills catalog: product manifests, skill front matter, catalog
 # entries (provenance, license, content hash, security flags, guardrail),
-# headers, and (on pull requests) the version-bump rule. Run locally with:
-#   uv run scripts/validate.py
+# headers, and (on pull requests) the version-bump rule; checks that the
+# generated catalog files are current; and runs the tooling tests. Locally:
+#   uv run scripts/validate.py && uv run scripts/build_catalog.py --check && uv run pytest
 name: validate
 
 on:
@@ -31,3 +32,7 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
         run: uv run --frozen scripts/validate.py
+      - name: Generated catalog files are current
+        run: uv run --frozen scripts/build_catalog.py --check
+      - name: Tooling tests
+        run: uv run --frozen pytest -q
