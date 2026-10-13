@@ -426,6 +426,21 @@ platform team that no policies have changed since architecture review
 
 ---
 
+## Confirm before changing live systems
+
+Before running any command that creates, changes, or deletes resources in a
+live environment, state what it will do and wait for the user's explicit
+approval. A request that names the specific change counts as approval for
+that change only.
+
+For watsonx Orchestrate this means:
+
+- Importing to the **draft** environment the user asked you to work in is
+  approved by the request. Re-confirm if the target environment changes.
+- **Always** ask first before promoting to the live environment, running any
+  `remove`/`delete` command, or creating or changing a connection's
+  credentials.
+
 ## Hard rules
 
 - Never add `ibm-watsonx-orchestrate` to `requirements.txt`

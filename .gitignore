@@ -13,3 +13,9 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# Python tooling (uv-managed dev environment)
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
