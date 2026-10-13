@@ -1,5 +1,5 @@
 # Skill-creator iteration workspaces — local-only eval runs, snapshots, benchmarks
-plugins/*/skills/*-workspace/
+products/*/skills/*-workspace/
 
 # Secrets / local config — never commit
 .env

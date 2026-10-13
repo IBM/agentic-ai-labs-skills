@@ -1,9 +1,0 @@
-{
-  "name": "wxo-agent-architect",
-  "version": "1.1.0",
-  "description": "Skill for building, editing, and publishing IBM watsonx Orchestrate agents, tools, toolkits, knowledge bases, models, and connections.",
-  "author": {
-    "name": "Mike O'Brien"
-  },
-  "license": "Apache-2.0"
-}

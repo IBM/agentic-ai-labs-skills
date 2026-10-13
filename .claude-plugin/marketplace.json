@@ -12,7 +12,8 @@
       "author": {
         "name": "Mike O'Brien"
       },
-      "source": "./plugins/wxo-agent-architect"
+      "source": "./products/watsonx-orchestrate",
+      "version": "1.2.0"
     }
   ]
 }

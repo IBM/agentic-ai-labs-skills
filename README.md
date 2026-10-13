@@ -11,13 +11,13 @@ once, then install any skill it publishes.
 
 A curated set of Claude Code skills for building on IBM's agentic platforms. The
 marketplace manifest lives at [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json);
-each skill is a plugin under [`plugins/`](plugins/).
+each product is a plugin under [`products/`](products/).
 
 ## Available skills
 
 | Skill | Description |
 |-------|-------------|
-| [`wxo-agent-architect`](plugins/wxo-agent-architect) | Build, edit, test, and publish IBM watsonx Orchestrate (WXO) agents, tools, toolkits, knowledge bases, models, and connections using the orchestrate ADK and CLI. |
+| [`wxo-agent-architect`](products/watsonx-orchestrate) | Build, edit, test, and publish IBM watsonx Orchestrate (WXO) agents, tools, toolkits, knowledge bases, models, and connections using the orchestrate ADK and CLI. |
 
 ## Install
 

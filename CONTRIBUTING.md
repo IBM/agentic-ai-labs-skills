@@ -93,11 +93,11 @@ and test it, and it must meet the same bar as hand-written content.
 
 ## Adding or changing a plugin
 
-Each plugin lives under `plugins/<plugin-name>/`:
+Each plugin lives under `products/<product>/`:
 
 ```
-plugins/<plugin-name>/
-├── .claude-plugin/plugin.json          # name, version, description, author, license
+products/<product>/
+├── plugin.json                         # Agent Plugins manifest: name, version, description, license
 ├── README.md                           # what it does, requirements
 ├── commands/<command>.md               # optional slash commands (front matter required)
 └── skills/<skill-name>/

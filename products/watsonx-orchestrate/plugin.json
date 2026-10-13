@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "wxo-agent-architect",
+  "version": "1.2.0",
+  "description": "Skill for building, editing, and publishing IBM watsonx Orchestrate agents, tools, toolkits, knowledge bases, models, and connections.",
+  "author": {
+    "name": "Mike O'Brien"
+  },
+  "homepage": "https://github.com/IBM/agentic-ai-labs-skills/tree/main/products/watsonx-orchestrate",
+  "repository": "https://github.com/IBM/agentic-ai-labs-skills",
+  "license": "Apache-2.0",
+  "keywords": ["ibm", "watsonx-orchestrate", "wxo", "agents"],
+  "extensions": {
+    "com.ibm.agentic-ai-labs": {
+      "displayName": "IBM watsonx Orchestrate",
+      "category": "AI agents"
+    }
+  }
+}

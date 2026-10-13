@@ -5,6 +5,13 @@ versions follow [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Changed
+- Repository layout: each product is now a folder under `products/` that is
+  also a portable Agent Plugins package (root `plugin.json`).
+- `wxo-agent-architect` 1.2.0 moved to `products/watsonx-orchestrate/`. The
+  plugin name and install commands are unchanged; run
+  `/plugin marketplace update agentic-ai-labs` to pick it up.
+
 ## [1.1.0] - 2026-10-12
 
 ### Added

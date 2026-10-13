@@ -76,8 +76,8 @@ for p in market.get("plugins", []):
         err(f"marketplace.json: duplicate plugin name '{name}'")
     registered[name] = os.path.normpath(src)
 
-# Every directory under plugins/ must be registered.
-for d in sorted(glob.glob("plugins/*/")):
+# Every directory under products/ must be registered.
+for d in sorted(glob.glob("products/*/")):
     d = os.path.normpath(d)
     if d not in registered.values():
         err(f"{d}: plugin directory is not registered in marketplace.json")
@@ -90,7 +90,7 @@ for name in registered:
 
 # --- per-plugin checks -------------------------------------------------------
 for name, src in registered.items():
-    manifest = os.path.join(src, ".claude-plugin", "plugin.json")
+    manifest = os.path.join(src, "plugin.json")
     try:
         meta = json.loads(read(manifest))
     except (OSError, ValueError) as exc:
@@ -132,7 +132,7 @@ for name, src in registered.items():
 tracked = git("ls-files", "*.md").stdout.split()
 for path in sorted(tracked):
     if path in HEADER_EXEMPT or not (
-        "/" not in path or path.startswith("plugins/")
+        "/" not in path or path.startswith("products/")
     ):
         continue
     if path in HEADER_EXEMPT:
@@ -146,7 +146,7 @@ base = os.environ.get("BASE_SHA", "").strip()
 if base:
     for name, src in registered.items():
         changed = git("diff", "--name-only", f"{base}...HEAD", "--", src).stdout.split()
-        manifest = os.path.join(src, ".claude-plugin", "plugin.json")
+        manifest = os.path.join(src, "plugin.json")
         # Only the manifest itself changing does not count as content.
         content = [c for c in changed if c != manifest]
         if not content:
