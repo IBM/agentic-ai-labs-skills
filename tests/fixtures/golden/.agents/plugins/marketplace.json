@@ -1,0 +1,32 @@
+{
+  "name": "agentic-ai-labs",
+  "interface": {
+    "displayName": "Agentic AI Labs: IBM skills"
+  },
+  "plugins": [
+    {
+      "name": "confluent",
+      "source": {
+        "source": "local",
+        "path": "./products/confluent"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Data"
+    },
+    {
+      "name": "db2",
+      "source": {
+        "source": "local",
+        "path": "./products/db2"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Data"
+    }
+  ]
+}

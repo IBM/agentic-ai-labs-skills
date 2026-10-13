@@ -1,0 +1,25 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "agentic-ai-labs",
+  "description": "Agent skills for IBM products, packaged for Claude Code, Codex, GitHub Copilot, Cursor, IBM Bob, and other coding agents.",
+  "owner": {
+    "name": "Agentic AI Labs"
+  },
+  "plugins": [
+    {
+      "name": "confluent",
+      "description": "IBM confluent skills for coding agents.",
+      "source": "./products/confluent",
+      "version": "1.0.0"
+    },
+    {
+      "name": "db2",
+      "description": "IBM db2 skills for coding agents.",
+      "author": {
+        "name": "Agentic AI Labs"
+      },
+      "source": "./products/db2",
+      "version": "1.2.0"
+    }
+  ]
+}

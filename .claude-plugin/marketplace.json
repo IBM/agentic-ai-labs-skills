@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "agentic-ai-labs",
-  "description": "Shared Claude Code plugins and skills from the Agentic AI Labs team.",
+  "description": "Agent skills for IBM products, packaged for Claude Code, Codex, GitHub Copilot, Cursor, IBM Bob, and other coding agents.",
   "owner": {
     "name": "Agentic AI Labs"
   },
