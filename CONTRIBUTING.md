@@ -4,17 +4,23 @@
 
 # Contributing to Agentic AI Labs Skills
 
-Thanks for your interest in contributing! This repository is a Claude Code
-**plugin marketplace** made of plain Markdown and JSON: no executable code, no
-dependencies, no build step. Contributions are skills, slash commands, and the
-documentation around them.
+Thanks for your interest in contributing! This repository is an agent-neutral
+catalog of skills for IBM products, packaged for Claude Code, Codex, GitHub
+Copilot, Cursor, IBM Bob, and other coding agents. Contributions are skills
+(authored here or imported from upstream projects), optional agent-specific
+add-ons, and the documentation around them.
+
+**Skill content contains no executable code.** Maintainer tooling (validator,
+catalog generator, drift check, installer) lives in `scripts/`, and its tests
+live in `tests/`.
 
 ## Table of contents
 
 - [How to contribute](#how-to-contribute)
 - [Legal: license and DCO](#legal-license-and-dco)
 - [File requirements](#file-requirements)
-- [Adding or changing a plugin](#adding-or-changing-a-plugin)
+- [Adding or changing a product or skill](#adding-or-changing-a-product-or-skill)
+- [Importing a skill from another project](#importing-a-skill-from-another-project)
 - [Testing your change](#testing-your-change)
 - [Security and secret scanning](#security-and-secret-scanning)
 - [Pull request checklist](#pull-request-checklist)
@@ -68,7 +74,13 @@ SPDX-License-Identifier: Apache-2.0
   matter must stay the first thing in the file, so put the comments immediately
   after the closing `---`.
 - **JSON:** no header (JSON has no comments). The repository `LICENSE` covers it.
-- **Don't commit** build outputs, zips, or other generated artifacts.
+- **Imported skills** keep their upstream license and headers. Don't add this
+  project's header to them; see [importing skills](#importing-a-skill-from-another-project).
+- **Generated files** (`.claude-plugin/marketplace.json`,
+  `.agents/plugins/marketplace.json`, `CATALOG.md`, `THIRD_PARTY_NOTICES.md`,
+  `UPSTREAMS.md`) are written by `scripts/build_catalog.py`. Never edit them
+  by hand.
+- **Don't commit** build outputs, zips, or other artifacts.
 
 ```markdown
 ---
@@ -91,36 +103,76 @@ AI-generated contributions:
 AI-assisted work is welcome under human direction: you must review, understand,
 and test it, and it must meet the same bar as hand-written content.
 
-## Adding or changing a plugin
+## Adding or changing a product or skill
 
-Each plugin lives under `plugins/<plugin-name>/`:
+Each product is one folder, and that folder is also its plugin package. The
+full contract is in [docs/catalog-metadata.md](docs/catalog-metadata.md).
 
 ```
-plugins/<plugin-name>/
-├── .claude-plugin/plugin.json          # name, version, description, author, license
-├── README.md                           # what it does, requirements
-├── commands/<command>.md               # optional slash commands (front matter required)
+products/<product>/
+├── plugin.json                    # Agent Plugins manifest: name, version, description, license
+├── README.md                      # what the skills cover, requirements
+├── commands/<command>.md          # optional, Claude Code-only add-ons
 └── skills/<skill-name>/
-    ├── SKILL.md                        # front matter with `name` and `description`
-    └── reference/                      # optional deep-dive docs the skill points to
+    ├── SKILL.md                   # Agent Skills front matter only (name, description, ...)
+    ├── catalog-entry.json         # status, live-system flag, verification
+    └── references/                # optional deep-dive material
 ```
 
-1. Add the [file headers](#file-requirements) to every new file.
-2. Register a new plugin in [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json)
-   and add a row to the skills table in the [README](README.md).
-3. **Bump `version` in `plugin.json` when you change a plugin's content.** Claude
-   Code caches installed plugins and may skip an update when the version number
-   hasn't changed, so users would silently keep the old content.
-4. Keep `SKILL.md` focused: put long reference material in `reference/` and link
-   to it, so the skill stays cheap to load.
-5. Write the `description` field for *triggering*: it is how the agent decides
-   when to load the skill, so name the situations and keywords that should
-   activate it.
+1. **Start from a template.** Use [`templates/skill-build`](templates/skill-build)
+   for building applications against a product, or
+   [`templates/skill-ops`](templates/skill-ops) for deploying, configuring and
+   operating it. Name skills `<product>-build` and `<product>-ops`.
+2. **Keep front matter portable.** SKILL.md may only use the
+   [Agent Skills spec](https://agentskills.io/specification) keys. Put
+   agent-specific behaviour, such as Claude Code commands, in optional add-ons.
+3. **Guard live systems.** If following a skill can create, change or delete
+   resources in a live environment, set `"changes_live_systems": true` and
+   include the `## Confirm before changing live systems` section. Every
+   `*-ops` skill needs that section.
+4. **Bump `version` in the product's `plugin.json`** whenever anything in the
+   product folder changes. CI enforces this. Agents cache installed plugins
+   and skip updates when the version hasn't changed.
+5. **Regenerate the catalog** with `uv run scripts/build_catalog.py`. For a new
+   product, also add a row to the product table in the [README](README.md).
+6. **Keep `SKILL.md` focused.** Stay under about 500 lines and move depth
+   into `references/`. Write the `description` for *triggering*: name the
+   situations and keywords that should activate the skill.
+7. **Target the real IBM products.** Use public documentation only: nothing
+   internal-only, no customer names, no internal hostnames.
+
+## Importing a skill from another project
+
+Skills from other IBM teams and the community are welcome, credited to their
+authors. Follow [docs/importing-skills.md](docs/importing-skills.md). In short:
+
+- **License:** only MIT, Apache-2.0, BSD and ISC content is copied. Anything
+  else becomes a link-only entry in `catalog/pointers.json`.
+- **Pinning:** every import is pinned to an upstream commit, keeps its
+  upstream LICENSE file, and records its authors.
+- **Security review:** a maintainer reviews every import before it merges.
+  The review covers hidden instructions, credential handling, scripts, and
+  live-system changes.
+- **Edits:** copies stay byte-identical to upstream unless portability
+  requires an edit. Any edit is recorded, and a content hash catches
+  unrecorded ones.
 
 ## Testing your change
 
-There is no unit-test suite. A skill is only as good as the agent behavior it
-produces, so test it by using it:
+**Tooling checks.** Run the same checks as CI. They need
+[uv](https://docs.astral.sh/uv/):
+
+```
+uv sync
+uv run scripts/validate.py
+uv run scripts/build_catalog.py --check
+uv run pytest
+```
+
+**Behaviour checks.** Passing CI is necessary but not sufficient: a skill is
+only as good as the agent behaviour it produces, so test it by using it.
+[docs/verifying-skills.md](docs/verifying-skills.md) explains how to verify
+a skill and record the verification. For Claude Code:
 
 1. **Install from your clone** instead of the public repo:
    ```
@@ -135,9 +187,9 @@ produces, so test it by using it:
 3. Run a realistic task that should trigger the skill and confirm the agent
    follows the guidance. Also check that it does *not* trigger on unrelated
    requests.
-4. CI (`validate`) checks that `marketplace.json` sources exist and that skills
-   and commands have the required front matter. Passing it is necessary, not
-   sufficient.
+
+For other agents, install from your clone with
+`python3 scripts/install_skills.py --agent <agent> --product <product>`.
 
 Only one marketplace named `agentic-ai-labs` can be registered at a time. If you
 previously added the public repo, run `/plugin marketplace remove agentic-ai-labs`
@@ -196,8 +248,13 @@ contains an allowlisted example.
 - [ ] Every new or changed Markdown file has the copyright and SPDX header
       (after front matter where present).
 - [ ] Every commit is signed off (`git commit -s`).
-- [ ] `plugin.json` `version` bumped if plugin content changed; new plugins are
-      registered in `marketplace.json` and the README table.
+- [ ] `plugin.json` `version` bumped if product content changed; catalog files
+      regenerated (`uv run scripts/build_catalog.py`); new products added to the
+      README table.
+- [ ] Live-system skills set `changes_live_systems` and include the
+      confirmation section.
+- [ ] Imports follow [docs/importing-skills.md](docs/importing-skills.md),
+      including the recorded security review.
 - [ ] Tried the change in a real session (it triggers when it should and not
       when it shouldn't).
 - [ ] No secrets, credentials, internal hostnames, or generated artifacts.

@@ -1,18 +1,28 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "agentic-ai-labs",
-  "description": "Shared Claude Code plugins and skills from the Agentic AI Labs team.",
+  "description": "Agent skills for IBM products, packaged for Claude Code, Codex, GitHub Copilot, Cursor, IBM Bob, and other coding agents.",
   "owner": {
     "name": "Agentic AI Labs"
   },
   "plugins": [
+    {
+      "name": "sovereign-core",
+      "description": "Skills for deploying, upgrading, and operating IBM Sovereign Core on bare metal or customer-provided Red Hat OpenShift.",
+      "author": {
+        "name": "Agentic AI Labs"
+      },
+      "source": "./products/sovereign-core",
+      "version": "0.1.0"
+    },
     {
       "name": "wxo-agent-architect",
       "description": "Skill for building, editing, and publishing IBM watsonx Orchestrate agents, tools, toolkits, knowledge bases, models, and connections.",
       "author": {
         "name": "Mike O'Brien"
       },
-      "source": "./plugins/wxo-agent-architect"
+      "source": "./products/watsonx-orchestrate",
+      "version": "1.2.0"
     }
   ]
 }

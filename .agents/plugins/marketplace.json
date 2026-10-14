@@ -1,0 +1,32 @@
+{
+  "name": "agentic-ai-labs",
+  "interface": {
+    "displayName": "Agentic AI Labs: IBM skills"
+  },
+  "plugins": [
+    {
+      "name": "sovereign-core",
+      "source": {
+        "source": "local",
+        "path": "./products/sovereign-core"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Infrastructure"
+    },
+    {
+      "name": "wxo-agent-architect",
+      "source": {
+        "source": "local",
+        "path": "./products/watsonx-orchestrate"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "AI agents"
+    }
+  ]
+}
