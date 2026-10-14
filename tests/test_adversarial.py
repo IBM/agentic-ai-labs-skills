@@ -139,7 +139,7 @@ def test_pointer_url_must_be_github(repo):
     repo.skill("db2", "db2-build")
     repo.pointers([{"name": "x", "url": "http://github.com.evil.example/a/b", "path": "p",
                     "ref": "c" * 40, "license": "MPL-2.0", "reason": "MPL", "products": ["db2"]}])
-    assert any("github.com" in e for e in errs(repo))
+    assert any("pointer.url must be" in e for e in errs(repo))
 
 
 # --- installer: data loss and interruption ---------------------------------------------------
