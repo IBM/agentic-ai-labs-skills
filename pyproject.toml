@@ -8,12 +8,14 @@
 name = "agentic-ai-labs-skills-tooling"
 version = "0.0.0"
 description = "Maintainer tooling for the Agentic AI Labs skills catalog"
-requires-python = ">=3.9"
+# 3.10+ for the dev tooling only, because pytest 9 (which fixes
+# CVE-2025-71176) dropped 3.9. The installer itself still runs on 3.9.
+requires-python = ">=3.10"
 dependencies = []
 
 [dependency-groups]
 dev = [
-    "pytest>=8",
+    "pytest>=9.0.3",
     "pyyaml>=6",
 ]
 
